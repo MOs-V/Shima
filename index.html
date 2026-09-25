@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Light the Candle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<main class="scene" id="scene" data-state="off">
+
+  <div class="backdrop"></div>
+  <div class="glow" id="glow"></div>
+
+  <a class="ig-btn" id="igBtn" href="https://www.instagram.com/cakesalisons?stkn=MTVtc2xxbTlmM3B6Yg%3D%3D&utm_source=qr" target="_blank" rel="noopener" aria-label="Visit our Instagram">
+    <svg viewBox="0 0 24 24" width="22" height="22">
+      <defs>
+        <linearGradient id="igGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#fdf497"/>
+          <stop offset="30%" stop-color="#fd5949"/>
+          <stop offset="60%" stop-color="#d6249f"/>
+          <stop offset="100%" stop-color="#285AEB"/>
+        </linearGradient>
+      </defs>
+      <rect x="2" y="2" width="20" height="20" rx="6" fill="url(#igGrad)"></rect>
+      <circle cx="12" cy="12" r="5" fill="none" stroke="#fff" stroke-width="1.8"></circle>
+      <circle cx="17.3" cy="6.7" r="1.2" fill="#fff"></circle>
+    </svg>
+  </a>
+
+  <section class="shelf" id="shelf" aria-hidden="true">
+    <div class="shelf-track" id="track"></div>
+  </section>
+
+  <div class="candle" id="candle" role="button" tabindex="0" aria-label="light the candle">
+    <div class="wax-drip drip1"></div>
+    <div class="wax-drip drip2"></div>
+    <div class="candle-body"></div>
+    <div class="wick"></div>
+    <div class="spark" id="spark"></div>
+    <div class="flame-wrap" id="flameWrap">
+      <div class="glow-halo"></div>
+      <div class="flame"><div class="flame-core"></div></div>
+    </div>
+    <div class="smoke" id="smoke"></div>
+  </div>
+
+  <p class="hint" id="hint">tap the candle</p>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
