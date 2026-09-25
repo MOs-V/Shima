@@ -23,18 +23,22 @@ function loadOne(src){
 }
 
 async function probeImages(){
-  const found = [];
+  EXPLICIT_IMAGES.forEach(f => appendCard(FOLDER + f)); // priority: known files first, immediately
   let miss = 0, i = 1;
   while (miss < GAP_STOP && i <= SAFETY_CEILING){
     const names = [String(i), String(i).padStart(2,'0'), `product${i}`, `product-${String(i).padStart(2,'0')}`];
     const candidates = [];
     names.forEach(n => EXTENSIONS.forEach(ext => candidates.push(`${FOLDER}${n}.${ext}`)));
     const hits = (await Promise.all(candidates.map(loadOne))).filter(Boolean);
-    if (hits.length){ found.push(...hits); miss = 0; } else { miss++; }
+    if (hits.length){ hits.forEach(appendCard); miss = 0; } else { miss++; }
     i++;
   }
-  const all = EXPLICIT_IMAGES.map(f => FOLDER + f).concat(found);
-  return [...new Set(all)]; // dedupe in case explicit + probe overlap
+  if (!track.children.length){
+    const note = document.createElement('div');
+    note.className = 'empty-note';
+    note.textContent = 'add images to assets/candle-products/ to fill this shelf';
+    track.appendChild(note);
+  }
 }
 
 /* ---------------- candle toggle ---------------- */
@@ -73,32 +77,25 @@ candle.addEventListener('keydown', e=>{
 const track = document.getElementById('track');
 const shelfEl = document.getElementById('shelf');
 
-function buildShelf(paths){
-  track.innerHTML = '';
-  if (!paths.length){
-    const note = document.createElement('div');
-    note.className = 'empty-note';
-    note.textContent = 'add images to assets/candle-products/ to fill this shelf';
-    track.appendChild(note);
-  } else {
-    paths.forEach(src=>{
-      const card = document.createElement('div');
-      card.className = 'card';
-      const img = document.createElement('img');
-      img.src = src;
-      img.alt = '';
-      img.onerror = () => { // don't leave a blank slide for a broken image
-        card.remove();
-        computeBounds();
-        posX = clamp(posX);
-        applyTransform();
-      };
-      card.appendChild(img);
-      track.appendChild(card);
-    });
-  }
+const addedSrcs = new Set();
+function appendCard(src){ // adds one product as soon as it's found; already-visible ones never reload
+  if (addedSrcs.has(src)) return;
+  addedSrcs.add(src);
+  const card = document.createElement('div');
+  card.className = 'card';
+  const img = document.createElement('img');
+  img.src = src;
+  img.alt = '';
+  img.onerror = () => { // don't leave a blank slide for a broken image
+    card.remove();
+    computeBounds();
+    posX = clamp(posX);
+    applyTransform();
+  };
+  card.appendChild(img);
+  track.appendChild(card);
   computeBounds();
-  posX = clamp(0);
+  posX = clamp(posX);
   applyTransform();
 }
 
@@ -168,7 +165,7 @@ function inertia(){
 }
 
 /* ---------------- init ---------------- */
-probeImages().then(buildShelf);
+probeImages();
 window.addEventListener('resize', ()=>{
   computeBounds();
   posX = clamp(posX);
